@@ -1,0 +1,53 @@
+    <script>
+        var pusher = new Pusher('3178885c3e1f517f03e2', {
+          cluster: 'ap1',
+          encrypted: true
+        });
+    </script>
+
+
+
+    <div class="wrapper">
+
+        <div class="title">
+            <h1>Ruby Chat</h1>
+        
+        </div>
+
+        <div class="posts" id="post_section">
+            <% @chats.each do |chat| %>
+                <div class="post-card">
+
+                    <div class="body-trunc">
+                        <p> <%= chat.message %> </p>
+
+                    </div>
+                </div>
+            <% end %>
+        </div>
+
+      </div>
+
+
+
+
+ <script>
+        var channel = pusher.subscribe('posts-channel');
+        channel.bind('new-post', function(data) {
+          
+            let post_id = data.id
+            let chat_message = data.message;
+            
+
+            let div = document.getElementById('post_section');
+            let new_content = document.createElement("div");
+            new_content.innerHTML = `
+                <div class="post-card">
+                  
+                    <div class="body-trunc">
+                        <p>${chat_message}</p>
+                    </div>
+                </div>`;
+            div.insertBefore(new_content, div.firstChild);
+        });
+    </script> 
